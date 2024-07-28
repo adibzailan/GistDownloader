@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+import sys
 import requests
 from pathlib import Path
 
@@ -49,16 +51,14 @@ def get_language(filename):
         '.erl': 'erlang',
         '.tex': 'latex',
     }
-    return language_map.get(extension, 'plaintext')  # Default to 'plaintext' for unknown extensions
+    return language_map.get(extension, 'plaintext')
 
 def download_gists(username, token, output_file):
-    # Get all gists for the user
     url = f"https://api.github.com/users/{username}/gists"
     headers = {"Authorization": f"token {token}"}
     response = requests.get(url, headers=headers)
     gists = response.json()
 
-    # Create a single file to store all gist contents
     with open(output_file, "w", encoding="utf-8") as outfile:
         for gist in gists:
             outfile.write(f"# Gist ID: {gist['id']}\n")
@@ -72,32 +72,23 @@ def download_gists(username, token, output_file):
                 outfile.write(file_content)
                 outfile.write("\n```\n\n")
 
-            outfile.write("---\n\n")  # Separator between gists
+            outfile.write("---\n\n")
 
     print(f"All gists have been downloaded and combined into '{output_file}'")
 
 if __name__ == "__main__":
-    username = input("Enter your GitHub username: ")
-    token = input("Enter your GitHub personal access token: ")
-
-    # Ask for the file name
-    file_name = input("Enter the name for the output file (e.g., my_gists.txt): ")
-    if not file_name:
-        file_name = "all_gists.txt"  # Default file name if none provided
-
-    # Ask for output file location
-    output_location = input("Enter the output file location (press Enter for desktop): ")
-    if not output_location:
-        # Use desktop as default location
-        desktop = Path.home() / "Desktop"
-        output_location = desktop
+    if len(sys.argv) > 1:
+        username = sys.argv[1]
+        token = sys.argv[2]
+        file_name = sys.argv[3] if len(sys.argv) > 3 else "all_gists.txt"
+        output_location = Path(sys.argv[4]) if len(sys.argv) > 4 else Path.home() / "Desktop"
     else:
-        output_location = Path(output_location)
+        username = input("Enter your GitHub username: ")
+        token = input("Enter your GitHub personal access token: ")
+        file_name = input("Enter the name for the output file (e.g., my_gists.txt): ") or "all_gists.txt"
+        output_location = Path(input("Enter the output file location (press Enter for desktop): ") or Path.home() / "Desktop")
 
-    # Combine the location and file name
     full_output_path = output_location / file_name
-
-    # Ensure the directory exists
     full_output_path.parent.mkdir(parents=True, exist_ok=True)
 
     download_gists(username, token, str(full_output_path))
