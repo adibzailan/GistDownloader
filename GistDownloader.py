@@ -14,7 +14,7 @@ def download_gists(username, token, output_file):
         for gist in gists:
             outfile.write(f"Gist ID: {gist['id']}\n")
             outfile.write(f"Description: {gist['description']}\n\n")
-            
+
             for filename, file_info in gist['files'].items():
                 outfile.write(f"File: {filename}\n")
                 file_content = requests.get(file_info['raw_url']).text
@@ -26,17 +26,25 @@ def download_gists(username, token, output_file):
 if __name__ == "__main__":
     username = input("Enter your GitHub username: ")
     token = input("Enter your GitHub personal access token: ")
-    
+
+    # Ask for the file name
+    file_name = input("Enter the name for the output file (e.g., my_gists.txt): ")
+    if not file_name:
+        file_name = "all_gists.txt"  # Default file name if none provided
+
     # Ask for output file location
     output_location = input("Enter the output file location (press Enter for desktop): ")
     if not output_location:
         # Use desktop as default location
         desktop = Path.home() / "Desktop"
-        output_location = desktop / "all_gists.txt"
+        output_location = desktop
     else:
         output_location = Path(output_location)
-    
+
+    # Combine the location and file name
+    full_output_path = output_location / file_name
+
     # Ensure the directory exists
-    output_location.parent.mkdir(parents=True, exist_ok=True)
-    
-    download_gists(username, token, str(output_location))
+    full_output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    download_gists(username, token, str(full_output_path))
