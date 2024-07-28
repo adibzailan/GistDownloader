@@ -1,6 +1,55 @@
 import requests
-import os
 from pathlib import Path
+
+def get_language(filename):
+    extension = Path(filename).suffix.lower()
+    language_map = {
+        '.cs': 'csharp',
+        '.xml': 'xml',
+        '.config': 'xml',
+        '.json': 'json',
+        '.html': 'html',
+        '.css': 'css',
+        '.js': 'javascript',
+        '.ts': 'typescript',
+        '.sql': 'sql',
+        '.py': 'python',
+        '.addin': 'xml',
+        '.txt': 'plaintext',
+        '.md': 'markdown',
+        '.yml': 'yaml',
+        '.yaml': 'yaml',
+        '.sh': 'bash',
+        '.bat': 'batch',
+        '.ps1': 'powershell',
+        '.rb': 'ruby',
+        '.java': 'java',
+        '.php': 'php',
+        '.go': 'go',
+        '.swift': 'swift',
+        '.kt': 'kotlin',
+        '.rs': 'rust',
+        '.cpp': 'cpp',
+        '.c': 'c',
+        '.h': 'cpp',
+        '.hpp': 'cpp',
+        '.vb': 'vb',
+        '.fs': 'fsharp',
+        '.r': 'r',
+        '.m': 'matlab',
+        '.scala': 'scala',
+        '.groovy': 'groovy',
+        '.pl': 'perl',
+        '.lua': 'lua',
+        '.dart': 'dart',
+        '.ex': 'elixir',
+        '.exs': 'elixir',
+        '.hs': 'haskell',
+        '.clj': 'clojure',
+        '.erl': 'erlang',
+        '.tex': 'latex',
+    }
+    return language_map.get(extension, 'plaintext')  # Default to 'plaintext' for unknown extensions
 
 def download_gists(username, token, output_file):
     # Get all gists for the user
@@ -12,14 +61,18 @@ def download_gists(username, token, output_file):
     # Create a single file to store all gist contents
     with open(output_file, "w", encoding="utf-8") as outfile:
         for gist in gists:
-            outfile.write(f"Gist ID: {gist['id']}\n")
+            outfile.write(f"# Gist ID: {gist['id']}\n")
             outfile.write(f"Description: {gist['description']}\n\n")
 
             for filename, file_info in gist['files'].items():
-                outfile.write(f"File: {filename}\n")
+                language = get_language(filename)
+                outfile.write(f"## File: {filename}\n")
+                outfile.write(f"```{language}\n")
                 file_content = requests.get(file_info['raw_url']).text
                 outfile.write(file_content)
-                outfile.write("\n\n" + "="*50 + "\n\n")
+                outfile.write("\n```\n\n")
+
+            outfile.write("---\n\n")  # Separator between gists
 
     print(f"All gists have been downloaded and combined into '{output_file}'")
 
