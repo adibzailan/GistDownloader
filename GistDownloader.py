@@ -80,13 +80,16 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         username = sys.argv[1]
         token = sys.argv[2]
-        file_name = sys.argv[3] if len(sys.argv) > 3 else "all_gists.txt"
+        file_name = sys.argv[3] if len(sys.argv) > 3 else "all_gists.md"
         output_location = Path(sys.argv[4]) if len(sys.argv) > 4 else Path.home() / "Desktop"
     else:
         username = input("Enter your GitHub username: ")
         token = input("Enter your GitHub personal access token: ")
-        file_name = input("Enter the name for the output file (e.g., my_gists.txt): ") or "all_gists.txt"
+        file_name = input("Enter the name for the output file (e.g., my_gists.md): ") or "all_gists.md"
         output_location = Path(input("Enter the output file location (press Enter for desktop): ") or Path.home() / "Desktop")
+
+    # Ensure the file extension is .md
+    file_name = Path(file_name).with_suffix('.md')
 
     full_output_path = output_location / file_name
     full_output_path.parent.mkdir(parents=True, exist_ok=True)
