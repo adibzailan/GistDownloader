@@ -1,55 +1,22 @@
-#!/usr/bin/env python
-import sys
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
 import requests
 from pathlib import Path
 
 def get_language(filename):
     extension = Path(filename).suffix.lower()
     language_map = {
-        '.cs': 'csharp',
-        '.xml': 'xml',
-        '.config': 'xml',
-        '.json': 'json',
-        '.html': 'html',
-        '.css': 'css',
-        '.js': 'javascript',
-        '.ts': 'typescript',
-        '.sql': 'sql',
-        '.py': 'python',
-        '.addin': 'xml',
-        '.txt': 'plaintext',
-        '.md': 'markdown',
-        '.yml': 'yaml',
-        '.yaml': 'yaml',
-        '.sh': 'bash',
-        '.bat': 'batch',
-        '.ps1': 'powershell',
-        '.rb': 'ruby',
-        '.java': 'java',
-        '.php': 'php',
-        '.go': 'go',
-        '.swift': 'swift',
-        '.kt': 'kotlin',
-        '.rs': 'rust',
-        '.cpp': 'cpp',
-        '.c': 'c',
-        '.h': 'cpp',
-        '.hpp': 'cpp',
-        '.vb': 'vb',
-        '.fs': 'fsharp',
-        '.r': 'r',
-        '.m': 'matlab',
-        '.scala': 'scala',
-        '.groovy': 'groovy',
-        '.pl': 'perl',
-        '.lua': 'lua',
-        '.dart': 'dart',
-        '.ex': 'elixir',
-        '.exs': 'elixir',
-        '.hs': 'haskell',
-        '.clj': 'clojure',
-        '.erl': 'erlang',
-        '.tex': 'latex',
+        '.cs': 'csharp', '.xml': 'xml', '.config': 'xml', '.json': 'json',
+        '.html': 'html', '.css': 'css', '.js': 'javascript', '.ts': 'typescript',
+        '.sql': 'sql', '.py': 'python', '.addin': 'xml', '.txt': 'plaintext',
+        '.md': 'markdown', '.yml': 'yaml', '.yaml': 'yaml', '.sh': 'bash',
+        '.bat': 'batch', '.ps1': 'powershell', '.rb': 'ruby', '.java': 'java',
+        '.php': 'php', '.go': 'go', '.swift': 'swift', '.kt': 'kotlin',
+        '.rs': 'rust', '.cpp': 'cpp', '.c': 'c', '.h': 'cpp', '.hpp': 'cpp',
+        '.vb': 'vb', '.fs': 'fsharp', '.r': 'r', '.m': 'matlab',
+        '.scala': 'scala', '.groovy': 'groovy', '.pl': 'perl', '.lua': 'lua',
+        '.dart': 'dart', '.ex': 'elixir', '.exs': 'elixir', '.hs': 'haskell',
+        '.clj': 'clojure', '.erl': 'erlang', '.tex': 'latex',
     }
     return language_map.get(extension, 'plaintext')
 
@@ -74,24 +41,73 @@ def download_gists(username, token, output_file):
 
             outfile.write("---\n\n")
 
-    print(f"All gists have been downloaded and combined into '{output_file}'")
+def browse_files():
+    filename = filedialog.asksaveasfilename(defaultextension=".md", filetypes=[("Markdown files", "*.md")])
+    output_file_var.set(filename)
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        username = sys.argv[1]
-        token = sys.argv[2]
-        file_name = sys.argv[3] if len(sys.argv) > 3 else "all_gists.md"
-        output_location = Path(sys.argv[4]) if len(sys.argv) > 4 else Path.home() / "Desktop"
-    else:
-        username = input("Enter your GitHub username: ")
-        token = input("Enter your GitHub personal access token: ")
-        file_name = input("Enter the name for the output file (e.g., my_gists.md): ") or "all_gists.md"
-        output_location = Path(input("Enter the output file location (press Enter for desktop): ") or Path.home() / "Desktop")
+def download_gists_gui():
+    username = username_var.get().strip()
+    token = token_var.get().strip()
+    output_file = output_file_var.get().strip()
 
-    # Ensure the file extension is .md
-    file_name = Path(file_name).with_suffix('.md')
+    if not username or not token or not output_file:
+        messagebox.showerror("Error", "Please fill in all fields")
+        return
 
-    full_output_path = output_location / file_name
-    full_output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        download_button.config(state=tk.DISABLED, text="Downloading...", bg="#f0f0f0")
+        root.update()
+        download_gists(username, token, output_file)
+        download_button.config(state=tk.NORMAL, text="Gists downloaded", bg="#FF6F61", fg="white")
+        root.after(2000, lambda: download_button.config(text="Download Gists", bg="#f0f0f0", fg="black"))
+    except Exception as e:
+        download_button.config(state=tk.NORMAL, text="Download Gists", bg="#f0f0f0", fg="black")
+        messagebox.showerror("Error", str(e))
 
-    download_gists(username, token, str(full_output_path))
+# Set up the main window
+root = tk.Tk()
+root.title("GitHub Gist Downloader")
+root.geometry("500x350")
+root.configure(bg="#f0f0f0")
+
+# Create and configure a main frame
+main_frame = ttk.Frame(root, padding="20 20 20 20")
+main_frame.grid(column=0, row=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
+# Create StringVar for inputs
+username_var = tk.StringVar()
+token_var = tk.StringVar()
+output_file_var = tk.StringVar()
+
+# Username
+ttk.Label(main_frame, text="GitHub Username:").grid(column=0, row=0, sticky=tk.W, pady=(0, 5))
+ttk.Entry(main_frame, width=50, textvariable=username_var).grid(column=0, row=1, sticky=(tk.W, tk.E), pady=(0, 10))
+
+# Token
+ttk.Label(main_frame, text="GitHub Personal Access Token:").grid(column=0, row=2, sticky=tk.W, pady=(0, 5))
+ttk.Entry(main_frame, width=50, textvariable=token_var, show="*").grid(column=0, row=3, sticky=(tk.W, tk.E), pady=(0, 10))
+
+# Output File
+ttk.Label(main_frame, text="Output File:").grid(column=0, row=4, sticky=tk.W, pady=(0, 5))
+output_file_frame = ttk.Frame(main_frame)
+output_file_frame.grid(column=0, row=5, sticky=(tk.W, tk.E), pady=(0, 10))
+ttk.Entry(output_file_frame, width=40, textvariable=output_file_var).grid(column=0, row=0, sticky=(tk.W, tk.E))
+ttk.Button(output_file_frame, text="Browse", command=browse_files).grid(column=1, row=0, sticky=tk.E, padx=(10, 0))
+
+# Set placeholder for output file
+output_file_var.set("Click 'Browse' to select output file location")
+
+# Download Button (using tk.Button instead of ttk.Button)
+download_button = tk.Button(main_frame, text="Download Gists", command=download_gists_gui, 
+                            bg="#f0f0f0", fg="black", font=("Helvetica", 12),
+                            padx=10, pady=5)
+download_button.grid(column=0, row=6, sticky=tk.W, pady=(10, 0))
+
+# Footer
+footer_text = "Beta v0.1 / Made with love in Singapore, Adib Zailan, 2024"
+footer_label = ttk.Label(root, text=footer_text, foreground="#888888", font=("Helvetica", 8))
+footer_label.grid(column=0, row=1, sticky=(tk.S, tk.W), padx=10, pady=5)
+
+root.mainloop()
