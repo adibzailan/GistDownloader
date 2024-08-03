@@ -51,7 +51,9 @@ def download_gists_gui():
     output_file = output_file_var.get().strip()
 
     if not username or not token or not output_file:
+        download_button.config(state=tk.NORMAL, text="Error ??", bg="#FF0000", fg="white")
         messagebox.showerror("Error", "Please fill in all fields")
+        root.after(2000, lambda: download_button.config(text="Download Gists", bg="#f0f0f0", fg="black"))
         return
 
     try:
@@ -61,8 +63,9 @@ def download_gists_gui():
         download_button.config(state=tk.NORMAL, text="Gists downloaded", bg="#FF6F61", fg="white")
         root.after(2000, lambda: download_button.config(text="Download Gists", bg="#f0f0f0", fg="black"))
     except Exception as e:
-        download_button.config(state=tk.NORMAL, text="Download Gists", bg="#f0f0f0", fg="black")
+        download_button.config(state=tk.NORMAL, text="Error ??", bg="#FF0000", fg="white")
         messagebox.showerror("Error", str(e))
+        root.after(2000, lambda: download_button.config(text="Download Gists", bg="#f0f0f0", fg="black"))
 
 # Set up the main window
 root = tk.Tk()
@@ -99,8 +102,8 @@ ttk.Button(output_file_frame, text="Browse", command=browse_files).grid(column=1
 # Set placeholder for output file
 output_file_var.set("Click 'Browse' to select output file location")
 
-# Download Button (using tk.Button instead of ttk.Button)
-download_button = tk.Button(main_frame, text="Download Gists", command=download_gists_gui, 
+# Download Button
+download_button = tk.Button(main_frame, text="Download Gists", command=download_gists_gui,
                             bg="#f0f0f0", fg="black", font=("Helvetica", 12),
                             padx=10, pady=5)
 download_button.grid(column=0, row=6, sticky=tk.W, pady=(10, 0))
