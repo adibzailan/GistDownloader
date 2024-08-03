@@ -51,7 +51,7 @@ def download_gists_gui():
     output_file = output_file_var.get().strip()
 
     if not username or not token or not output_file:
-        download_button.config(state=tk.NORMAL, text="Error ??", bg="#FF0000", fg="white")
+        download_button.config(state=tk.NORMAL, text="Error ?", bg="#FF0000", fg="white")
         messagebox.showerror("Error", "Please fill in all fields")
         root.after(2000, lambda: download_button.config(text="Download Gists", bg="#f0f0f0", fg="black"))
         return
@@ -63,7 +63,7 @@ def download_gists_gui():
         download_button.config(state=tk.NORMAL, text="Gists downloaded", bg="#FF6F61", fg="white")
         root.after(2000, lambda: download_button.config(text="Download Gists", bg="#f0f0f0", fg="black"))
     except Exception as e:
-        download_button.config(state=tk.NORMAL, text="Error ??", bg="#FF0000", fg="white")
+        download_button.config(state=tk.NORMAL, text="Error ?", bg="#FF0000", fg="white")
         messagebox.showerror("Error", str(e))
         root.after(2000, lambda: download_button.config(text="Download Gists", bg="#f0f0f0", fg="black"))
 
