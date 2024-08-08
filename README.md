@@ -58,7 +58,7 @@ This tool is developed using Python and the tkinter library for the graphical us
 
 ### Branding
 
-The tool incorporates elements of Studio Merpati branding:
+The tool incorporates elements of [Studio Merpati](https://www.instagram.com/studio.merpati/?hl=en) branding:
 - The success message button color (#FF6F61) is inspired by Studio Merpati's color palette, adding a personal touch to the user interface.
 - The error state uses a red background with a sad face icon for clear visual feedback.
 
