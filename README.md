@@ -1,14 +1,15 @@
 # GitHub Gist Downloader
+> Latest update: 8th August 2024
 
 ## Overview
 
-The GitHub Gist Downloader is a user-friendly desktop application that allows you to easily download and save all public gists from a specified GitHub user. This tool provides a simple interface to input a GitHub username, personal access token, and output file location, streamlining the process of archiving and reviewing gists.
+The GitHub Gist Downloader is a user-friendly desktop application that allows you to easily download and save specific gists from GitHub. This tool provides a simple interface to input a Gist ID, GitHub personal access token, and output file location, streamlining the process of archiving and reviewing gists.
 
 ## Features
 
 - Simple and intuitive graphical user interface
-- Download all public gists from a specified GitHub user
-- Secure input for GitHub personal access token
+- Download specific gists using their Gist ID
+- Option to input GitHub personal access token manually or use a token file
 - Custom output file selection
 - Error handling with visual feedback
 - Studio Merpati branding elements
@@ -24,33 +25,36 @@ The GitHub Gist Downloader is a user-friendly desktop application that allows yo
 
 ## Usage
 
-1. Run the script by executing (where "XX" is the version to date):
+1. Run the script by executing:
    ```
-   python GistDownloader_vXX.py
+   python GistDownloader_v12.py
    ```
 2. The GitHub Gist Downloader window will appear.
 
 ### Downloading Gists
 
-1. Enter the GitHub username of the account whose gists you want to download.
-2. Input your GitHub Personal Access Token. (See [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) for instructions on how to obtain one)
-3. Click the "Browse" button to select the location and name for the output file.
-4. Click the "Download Gists" button to start the download process.
+1. Enter the Gist ID of the gist you want to download.
+2. Choose whether to enter your GitHub Personal Access Token manually or use a token file:
+   - If entering manually, input your token in the provided field.
+   - If using a token file, click "Browse" to select the file containing your token.
+3. Click the "Browse" button next to "Output File" to select the location and name for the output file.
+4. Click the "Download Gist" button to start the download process.
 5. A success message will appear briefly on the button when the process is complete. The button will change color to a shade of coral (#FF6F61), which is a nod to the Studio Merpati branding.
 
 ## Error Handling
 
 The tool provides error messages in the following situations:
 - Any required field is left empty
-- Invalid GitHub username or personal access token
+- Invalid Gist ID or personal access token
 - Network connection issues
 - Insufficient permissions to write to the selected output location
+- Issues reading the token file (if using this option)
 
-When an error occurs, the "Download Gists" button will briefly turn red and display an error message.
+When an error occurs, the "Download Gist" button will briefly turn red and display an error message.
 
 ## Development
 
-This tool is developed using Python and the tkinter library for the graphical user interface. The main script is `GistDownloader.py`.
+This tool is developed using Python and the tkinter library for the graphical user interface. The main script is `GistDownloader_v12.py`.
 
 ### Branding
 
@@ -61,7 +65,7 @@ The tool incorporates elements of Studio Merpati branding:
 ### Future Improvements
 
 - Add a progress bar to show download status
-- Implement selective gist downloading (e.g., by date range or specific gist IDs)
+- Implement selective gist downloading (e.g., by date range or multiple specific gist IDs)
 - Add support for downloading private gists (requires extended permissions)
 - Create an executable version for easy distribution across different operating systems
 - Implement a dark mode theme option
@@ -77,4 +81,4 @@ This project is licensed under the MIT License.
 
 ## Acknowledgments
 
-Beta v0.1 / Made with love in Singapore, Adib Zailan, 2024
+Alpha v1.0 / Made with love in Singapore, Adib Zailan, 2024
