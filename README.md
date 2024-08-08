@@ -54,7 +54,7 @@ When an error occurs, the "Download Gist" button will briefly turn red and displ
 
 ## Development
 
-This tool is developed using Python and the tkinter library for the graphical user interface. The main script is `GistDownloader_v12.py`.
+This tool is developed using Python and the tkinter library for the graphical user interface. The main script is `GistDownloader.py`.
 
 ### Branding
 
