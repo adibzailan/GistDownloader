@@ -27,7 +27,7 @@ The GitHub Gist Downloader is a user-friendly desktop application that allows yo
 
 1. Run the script by executing:
    ```
-   python GistDownloader_v12.py
+   python GistDownloader.py
    ```
 2. The GitHub Gist Downloader window will appear.
 
